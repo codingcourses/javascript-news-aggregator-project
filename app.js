@@ -1,7 +1,9 @@
 const express = require('express');
 const axios = require('axios');
+const NodeCache = require('node-cache');
 
 const app = express();
+const cache = new NodeCache({ stdTTL: 600, checkperiod: 720 });
 
 app.use(express.static(__dirname + '/public'));
 
@@ -19,6 +21,13 @@ app.get('/news', async (req, res) => {
     return;
   }
 
+  // Check cache
+  const resultCached = cache.get(q);
+  if (resultCached) {
+    res.send(resultCached);
+    return;
+  }
+
   const endpoint = `https://newsapi.org/v2/everything?q=${q}&apiKey=${process.env.NEWS_API_KEY}`;
   try {
     const { data: { articles } } = await axios.get(endpoint);
@@ -33,6 +42,9 @@ app.get('/news', async (req, res) => {
     }))
     .filter(article => article.urlToImage);
     res.send(result);
+
+    // Add to cache
+    cache.set(q, result);
   } catch (e) {
     res.status(400).send({ error: 'Error occurred when making NewsAPI request' });
     return;
