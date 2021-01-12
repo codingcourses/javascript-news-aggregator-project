@@ -116,7 +116,7 @@ class View {
       a.textContent = article.title;
       a.addEventListener('click', () => this.#onBookmarkOpen(article));
       li.append(a);
-      this.#bookmarksList.append(a);
+      this.#bookmarksList.append(li);
     }
   }
 
@@ -133,7 +133,6 @@ class View {
 
       const img = document.createElement('img');
       img.setAttribute('src', article.urlToImage);
-      img.setAttribute('uk-img', 'uk-img');
 
       const divTitle = document.createElement('div');
       divTitle.textContent = article.title;
@@ -155,7 +154,7 @@ class View {
     this.#articleLinkButton.addEventListener('click', () => window.open(article.url));
     this.#articleBookmarkButton.addEventListener('click', () => this.#onBookmarkAdd(article));
     this.#articleSource.textContent = article.source;
-    this.#articleDate.textContent = article.date;
+    this.#articleDate.textContent = article.publishedAt;
     this.#articleContent.textContent = article.description;
   }
 
@@ -171,7 +170,36 @@ class Controller {
   constructor(model, view) {
     this.#model = model;
     this.#view = view;
+
+    this.#view.bindOnSearch(this.onSearch);
+    this.#view.bindBookmarkOpen(this.onSelectArticle);
+    this.#view.bindSearchResultClick(this.onSelectArticle);
+    this.#view.bindBookmarkAdd(this.onBookmarkAdd);
+
+    this.#model.bindOnChange(this.onDataChange);
   }
+
+  onSearch = searchQuery => this.#model.search(searchQuery);
+
+  onSelectArticle = article => this.#model.updateArticle(article);
+
+  onBookmarkAdd = article => this.#model.addBookmark(article);
+
+  onDataChange = (key, data) => {
+    switch (key) {
+      case 'bookmarks':
+        this.#view.updateBookmarks(data);
+        break;
+      case 'searchResults':
+        this.#view.updateSearchResults(data);
+        break;
+      case 'article':
+        this.#view.updateArticle(data);
+        break;
+      default:
+        break;
+    }
+  };
 }
 
 const LOCAL_STORAGE_KEY = 'NewsAggregatorProject';
