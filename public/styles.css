@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600');
+
+/* Set core body defaults */
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+  font-family: "Quicksand", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: linear-gradient(to bottom right, #59afdf, #e137f8);
+  color: #222;
+}
+
+*::-webkit-scrollbar {
+  width: 0px;
+}
+
+/* Override UIkit Styles */
+.uk-search-input {
+  font-weight: 300;
+}
+
+.uk-grid, .uk-grid-small {
+  margin-left: 0px;
+}
+
+.uk-button {
+  padding: 0 1rem 0 0;
+  font-size: 1rem;
+  background-color: transparent;
+}
+
+.uk-button:hover {
+  color: #e137f8;
+}
+
+.uk-overlay-primary {
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+/* News Aggregator Project Styles */
+.container {
+  position: fixed;
+  height: calc(100% - 7.5rem);
+  width: calc(100% - 10rem);
+  margin: 7.5rem 5rem 0 5rem;
+  box-sizing: border-box;
+  background-color: white;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.25);
+}
+
+.header {
+  height: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  background-color: #ddd;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.logo {
+  font-size: 1.75rem;
+  font-weight: 500;
+}
+
+.icon {
+  color: #e137f8;
+}
+
+.content {
+  height: calc(100% - 7.5rem);
+  overflow-y: scroll;
+}
+
+.sidebar {
+  padding-top: 1rem;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  background-color: #eee;
+}
+
+.sidebar-item:hover {
+  background-color: #f7e3e7;
+}
+
+.sidebar-item-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 1rem;
+  object-fit: cover;
+}
+
+.sidebar-item-title {
+  margin-left: 1rem;
+  font-size: 1.125rem;
+}
+
+.article {
+  padding: 1rem;
+}
+
+.article-header {
+  height: 400px;
+  width: 100%;
+}
+
+.article-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.article-title {
+  color: #fff;
+  font-size: 3rem;
+}
+
+.article-author {
+  color: #ddd;
+  font-size: 1.5rem;
+}
+
+.article-info {
+  padding: 1rem;
+  background-color: #fddfe7;
+  font-size: 1.25rem;
+}
+
+.article-source {
+  font-weight: 500;
+}
+
+.article-date {
+  font-weight: 300;
+}
+
+.article-content {
+  padding: 1rem;
+  background-color: #ebe2fe;
+  font-weight: 400;
+  font-size: 1.25rem;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+.bookmark-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.bookmark-item-delete {
+  margin-left: 1rem;
+}

@@ -120,10 +120,12 @@ class View {
     this.#bookmarksList.innerHTML = '';
     for (const article of bookmarks) {
       const li = document.createElement('li');
+      li.setAttribute('class', 'bookmark-item');
       const a = document.createElement('a');
       a.textContent = article.title;
       a.addEventListener('click', () => this.#onBookmarkOpen(article));
       const deleteButton = document.createElement('a');
+      deleteButton.setAttribute('class', 'bookmark-item-delete');
       deleteButton.setAttribute('uk-icon', 'icon: trash');
       deleteButton.addEventListener('click', () => this.#onBookmarkDelete(article.id));
       li.append(a, deleteButton);
@@ -144,12 +146,15 @@ class View {
     for (const article of searchResults) {
       const li = document.createElement('li');
       const divOuter = document.createElement('div');
+      divOuter.setAttribute('class', 'sidebar-item');
       divOuter.addEventListener('click', () => this.#onSearchResultClick(article));
 
       const img = document.createElement('img');
+      img.setAttribute('class', 'sidebar-item-img');
       img.setAttribute('src', article.urlToImage);
 
       const divTitle = document.createElement('div');
+      divTitle.setAttribute('class', 'sidebar-item-title');
       divTitle.textContent = article.title;
 
       divOuter.append(img, divTitle);
