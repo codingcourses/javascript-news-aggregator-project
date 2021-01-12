@@ -66,6 +66,8 @@ class View {
   #articleContent;
 
   #onBookmarkOpen;
+  #onBookmarkAdd;
+  #onSearchResultClick;
 
   constructor() {
     this.#search = View.getElement('#search');
@@ -81,6 +83,8 @@ class View {
     this.#articleContent = View.getElement('#article-content');
 
     this.#onBookmarkOpen = () => {};
+    this.#onBookmarkAdd = () => {};
+    this.#onSearchResultClick = () => {};
   }
 
   static getElement(selector) {
@@ -106,11 +110,7 @@ class View {
       const li = document.createElement('li');
       const a = document.createElement('a');
       a.textContent = article.title;
-      a.addEventListener('click', () => {
-        if (this.#onBookmarkOpen) {
-          this.#onBookmarkOpen(article.id);
-        }
-      });
+      a.addEventListener('click', () => this.#onBookmarkOpen(article));
       li.append(a);
       this.#bookmarksList.append(a);
     }
@@ -118,6 +118,45 @@ class View {
 
   bindBookmarkOpen(handler) {
     this.#onBookmarkOpen = handler;
+  }
+
+  updateSearchResults(searchResults) {
+    this.#searchResults.innerHTML = '';
+    for (const article of searchResults) {
+      const li = document.createElement('li');
+      const divOuter = document.createElement('div');
+      divOuter.addEventListener('click', () => this.#onSearchResultClick(article));
+
+      const img = document.createElement('img');
+      img.setAttribute('src', article.urlToImage);
+      img.setAttribute('uk-img', 'uk-img');
+
+      const divTitle = document.createElement('div');
+      divTitle.textContent = article.title;
+
+      divOuter.append(img, divTitle);
+      li.append(divOuter);
+      this.#searchResults.append(li);
+    }
+  }
+
+  bindSearchResultClick(handler) {
+    this.#onSearchResultClick = handler;
+  }
+
+  updateArticle(article) {
+    this.#articleImage.setAttribute('src', article.urlToImage);
+    this.#articleTitle.textContent = article.title;
+    this.#articleAuthor.textContent = article.author;
+    this.#articleLinkButton.addEventListener('click', () => window.open(article.url));
+    this.#articleBookmarkButton.addEventListener('click', () => this.#onBookmarkAdd(article));
+    this.#articleSource.textContent = article.source;
+    this.#articleDate.textContent = article.date;
+    this.#articleContent.textContent = article.description;
+  }
+
+  bindBookmarkAdd(handler) {
+    this.#onBookmarkAdd = handler;
   }
 }
 
