@@ -50,7 +50,7 @@ class Model {
   }
 
   async search(query) {
-    const response = await fetch(`/news?q=${query}`);
+    const response = await fetch(`/news?q=${encodeURIComponent(query)}`);
     const data = await response.json();
     this.#updateSearchResults(data)
   }
