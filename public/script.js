@@ -50,6 +50,10 @@ class Model {
     const data = await response.json();
     this.#updateSearchResults(data)
   }
+
+  bindOnChange(handler) {
+    this.#onChange = handler;
+  }
 }
 
 class View {
