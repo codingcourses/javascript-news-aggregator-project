@@ -15,6 +15,10 @@ class Model {
   }
 
   addBookmark(article) {
+    if (this.#bookmarks.some(bookmark => bookmark.url === article.url)) {
+      return;
+    }
+
     this.#bookmarks.push({
       id: uuidv4(),
       ...article,
@@ -54,6 +58,10 @@ class Model {
   bindOnChange(handler) {
     this.#onChange = handler;
   }
+
+  initialize() {
+    this.#onChange('bookmarks', this.#bookmarks);
+  }
 }
 
 class View {
@@ -63,14 +71,14 @@ class View {
   #articleImage;
   #articleTitle;
   #articleAuthor;
-  #articleLinkButton;
-  #articleBookmarkButton;
+  #articleButtons;
   #articleSource;
   #articleDate;
   #articleContent;
 
   #onBookmarkOpen;
   #onBookmarkAdd;
+  #onBookmarkDelete;
   #onSearchResultClick;
 
   constructor() {
@@ -80,14 +88,14 @@ class View {
     this.#articleImage = View.getElement('#article-img');
     this.#articleTitle = View.getElement('#article-title');
     this.#articleAuthor = View.getElement('#article-author');
-    this.#articleLinkButton = View.getElement('#article-link-btn');
-    this.#articleBookmarkButton = View.getElement('#article-bookmark-btn');
+    this.#articleButtons = View.getElement('#article-btns');
     this.#articleSource = View.getElement('#article-source');
     this.#articleDate = View.getElement('#article-date');
     this.#articleContent = View.getElement('#article-content');
 
     this.#onBookmarkOpen = () => {};
     this.#onBookmarkAdd = () => {};
+    this.#onBookmarkDelete = () => {};
     this.#onSearchResultClick = () => {};
   }
 
@@ -115,13 +123,20 @@ class View {
       const a = document.createElement('a');
       a.textContent = article.title;
       a.addEventListener('click', () => this.#onBookmarkOpen(article));
-      li.append(a);
+      const deleteButton = document.createElement('a');
+      deleteButton.setAttribute('uk-icon', 'icon: trash');
+      deleteButton.addEventListener('click', () => this.#onBookmarkDelete(article.id));
+      li.append(a, deleteButton);
       this.#bookmarksList.append(li);
     }
   }
 
   bindBookmarkOpen(handler) {
     this.#onBookmarkOpen = handler;
+  }
+
+  bindBookmarkDelete(handler) {
+    this.#onBookmarkDelete = handler;
   }
 
   updateSearchResults(searchResults) {
@@ -151,10 +166,28 @@ class View {
     this.#articleImage.setAttribute('src', article.urlToImage);
     this.#articleTitle.textContent = article.title;
     this.#articleAuthor.textContent = article.author;
-    this.#articleLinkButton.addEventListener('click', () => window.open(article.url));
-    this.#articleBookmarkButton.addEventListener('click', () => this.#onBookmarkAdd(article));
+
+    const articleLinkButton = document.createElement('button');
+    articleLinkButton.setAttribute('class', 'uk-button');
+    const spanLink = document.createElement('span');
+    spanLink.setAttribute('class', 'icon');
+    spanLink.setAttribute('uk-icon', 'icon: link');
+    articleLinkButton.append(spanLink, 'View Full Article');
+    articleLinkButton.addEventListener('click', () => window.open(article.url));
+
+    const articleBookmarkButton = document.createElement('button');
+    articleBookmarkButton.setAttribute('class', 'uk-button');
+    const spanBookmark = document.createElement('span');
+    spanBookmark.setAttribute('class', 'icon');
+    spanBookmark.setAttribute('uk-icon', 'icon: bookmark');
+    articleBookmarkButton.append(spanBookmark, 'Add to Bookmarks');
+    articleBookmarkButton.addEventListener('click', () => this.#onBookmarkAdd(article));
+
+    this.#articleButtons.innerHTML = '';
+    this.#articleButtons.append(articleLinkButton, articleBookmarkButton);
+
     this.#articleSource.textContent = article.source;
-    this.#articleDate.textContent = article.publishedAt;
+    this.#articleDate.textContent = `Published ${formatDate(article.publishedAt)}`;
     this.#articleContent.textContent = article.description;
   }
 
@@ -175,8 +208,11 @@ class Controller {
     this.#view.bindBookmarkOpen(this.onSelectArticle);
     this.#view.bindSearchResultClick(this.onSelectArticle);
     this.#view.bindBookmarkAdd(this.onBookmarkAdd);
+    this.#view.bindBookmarkDelete(this.onBookmarkDelete);
 
     this.#model.bindOnChange(this.onDataChange);
+
+    this.#model.initialize();
   }
 
   onSearch = searchQuery => this.#model.search(searchQuery);
@@ -185,10 +221,13 @@ class Controller {
 
   onBookmarkAdd = article => this.#model.addBookmark(article);
 
+  onBookmarkDelete = id => this.#model.deleteBookmark(id);
+
   onDataChange = (key, data) => {
     switch (key) {
       case 'bookmarks':
         this.#view.updateBookmarks(data);
+        this.#model.save();
         break;
       case 'searchResults':
         this.#view.updateSearchResults(data);
@@ -205,3 +244,15 @@ class Controller {
 const LOCAL_STORAGE_KEY = 'NewsAggregatorProject';
 
 const app = new Controller(new Model(), new View());
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  };
+  return date.toLocaleString('en-US', options);
+}

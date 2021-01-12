@@ -35,50 +35,32 @@
           Bookmarks
         </button>
         <div uk-dropdown="mode: click">
-          <ul id="bookmarks-list" class="uk-nav uk-dropdown-nav">
-            <li><a href="#">This is the title</a></li>
-          </ul>
+          <ul id="bookmarks-list" class="uk-nav uk-dropdown-nav"></ul>
         </div>
       </span>
     </div>
 
     <div class="uk-grid-small" uk-grid>
       <div class="uk-width-1-3@m">
-        <ul id="search-results" class="uk-list">
-          <li>
-            <div>
-              <img src="https://via.placeholder.com/50x50" uk-img>
-              <div>This is the title</div>
-            </div>
-          </li>
-        </ul>
+        <ul id="search-results" class="uk-list"></ul>
       </div>
       <div class="uk-width-expand@m">
         <div class="uk-inline">
-          <img id="article-img" src="https://via.placeholder.com/400x300" uk-img>
+          <img id="article-img" src="">
           <div class="uk-overlay-primary uk-position-cover"></div>
           <div class="uk-overlay uk-position-bottom uk-light">
-            <div id="article-title">This is the title</div>
-            <div id="article-author">By John Smith</div>
+            <div id="article-title"></div>
+            <div id="article-author"></div>
           </div>
         </div>
 
         <div>
-          <button id="article-link-btn" class="uk-button">
-            <span class="icon" uk-icon="icon: link"></span>
-            View Full Article
-          </button>
-          <button id="article-bookmark-btn" class="uk-button">
-            <span class="icon" uk-icon="icon: bookmark"></span>
-            Add to Bookmarks
-          </button>
-          <div id="article-source">Reuters</div>
-          <div id="article-date">Published January 1, 2021 / 12:00 am</div>
+          <div id="article-btns"></div>
+          <div id="article-source"></div>
+          <div id="article-date"></div>
         </div>
 
-        <div id="article-content">
-          This is the article content.
-        </div>
+        <div id="article-content"></div>
       </div>
     </div>
 
