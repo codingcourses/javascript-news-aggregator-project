@@ -76,6 +76,10 @@ class View {
   #articleDate;
   #articleContent;
 
+  #message;
+  #content;
+  #article;
+
   #onBookmarkOpen;
   #onBookmarkAdd;
   #onBookmarkDelete;
@@ -92,6 +96,10 @@ class View {
     this.#articleSource = View.getElement('#article-source');
     this.#articleDate = View.getElement('#article-date');
     this.#articleContent = View.getElement('#article-content');
+
+    this.#message = View.getElement('#message');
+    this.#content = View.getElement('#content');
+    this.#article = View.getElement('#article');
 
     this.#onBookmarkOpen = () => {};
     this.#onBookmarkAdd = () => {};
@@ -118,6 +126,14 @@ class View {
 
   updateBookmarks(bookmarks) {
     this.#bookmarksList.innerHTML = '';
+
+    if (!bookmarks.length) {
+      const li = document.createElement('li');
+      li.textContent = 'You have no bookmarks.'
+      this.#bookmarksList.append(li);
+      return;
+    }
+
     for (const article of bookmarks) {
       const li = document.createElement('li');
       li.setAttribute('class', 'bookmark-item');
@@ -143,6 +159,18 @@ class View {
 
   updateSearchResults(searchResults) {
     this.#searchResults.innerHTML = '';
+
+    if (!searchResults.length) {
+      this.#content.style.display = 'none';
+      this.#message.textContent = 'No news articles found.'
+      this.#message.style.display = 'block';
+      this.#article.style.display = 'none';
+      return;
+    }
+
+    this.#content.style.display = 'flex';
+    this.#message.style.display = 'none';
+
     for (const article of searchResults) {
       const li = document.createElement('li');
       const divOuter = document.createElement('div');
@@ -168,6 +196,8 @@ class View {
   }
 
   updateArticle(article) {
+    this.#article.style.display = 'block';
+
     this.#articleImage.setAttribute('src', article.urlToImage);
     this.#articleTitle.textContent = article.title;
     this.#articleAuthor.textContent = article.author;
