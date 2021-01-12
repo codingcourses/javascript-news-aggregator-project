@@ -2,6 +2,7 @@ class Model {
   #bookmarks;
   #searchResults;
   #article;
+  #onChange;
 
   constructor() {
     // { id, source, author, title, description, url, urlToImage, publishedAt }
@@ -10,10 +11,15 @@ class Model {
       : [];
     this.#searchResults = [];
     this.#article = null;
+    this.#onChange = () => {};
   }
 
   addBookmark(article) {
-    this.#bookmarks.push(article);
+    this.#bookmarks.push({
+      id: uuidv4(),
+      ...article,
+    });
+    this.#onChange('bookmarks', this.#bookmarks);
   }
 
   deleteBookmark(id) {
@@ -22,6 +28,7 @@ class Model {
       return;
     }
     this.#bookmarks.splice(index, 1);
+    this.#onChange('bookmarks', this.#bookmarks);
   }
 
   save() {
@@ -30,10 +37,12 @@ class Model {
 
   #updateSearchResults(searchResults) {
     this.#searchResults = searchResults;
+    this.#onChange('searchResults', this.#searchResults);
   }
 
   updateArticle(article) {
     this.#article = article;
+    this.#onChange('article', this.#article);
   }
 
   async search(query) {
