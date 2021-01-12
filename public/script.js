@@ -53,11 +53,71 @@ class Model {
 }
 
 class View {
-  constructor() {}
+  #search;
+  #bookmarksList;
+  #searchResults;
+  #articleImage;
+  #articleTitle;
+  #articleAuthor;
+  #articleLinkButton;
+  #articleBookmarkButton;
+  #articleSource;
+  #articleDate;
+  #articleContent;
+
+  #onBookmarkOpen;
+
+  constructor() {
+    this.#search = View.getElement('#search');
+    this.#bookmarksList = View.getElement('#bookmarks-list');
+    this.#searchResults = View.getElement('#search-results');
+    this.#articleImage = View.getElement('#article-img');
+    this.#articleTitle = View.getElement('#article-title');
+    this.#articleAuthor = View.getElement('#article-author');
+    this.#articleLinkButton = View.getElement('#article-link-btn');
+    this.#articleBookmarkButton = View.getElement('#article-bookmark-btn');
+    this.#articleSource = View.getElement('#article-source');
+    this.#articleDate = View.getElement('#article-date');
+    this.#articleContent = View.getElement('#article-content');
+
+    this.#onBookmarkOpen = () => {};
+  }
 
   static getElement(selector) {
     const elem = document.querySelector(selector);
     return elem;
+  }
+
+  bindOnSearch(handler) {
+    this.#search.addEventListener('keyup', event => {
+      if (!event.target.value) {
+        return;
+      }
+
+      if (event.code === 'Enter' || event.key === 'Enter' || event.keyCode === 13) {
+        handler(event.target.value);
+      }
+    });
+  }
+
+  updateBookmarks(bookmarks) {
+    this.#bookmarksList.innerHTML = '';
+    for (const article of bookmarks) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.textContent = article.title;
+      a.addEventListener('click', () => {
+        if (this.#onBookmarkOpen) {
+          this.#onBookmarkOpen(article.id);
+        }
+      });
+      li.append(a);
+      this.#bookmarksList.append(a);
+    }
+  }
+
+  bindBookmarkOpen(handler) {
+    this.#onBookmarkOpen = handler;
   }
 }
 
